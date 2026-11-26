@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -48,6 +49,14 @@ def _dbt_binary() -> str:
     if candidate.exists():
         return str(candidate)
     return shutil.which("dbt") or "dbt"
+
+
+def _dbt_command() -> list[str]:
+    binary = Path(_dbt_binary())
+    if (binary.parent.parent / "pyvenv.cfg").is_file():
+        # An Airflow task can inject its own Python package paths into Bash.
+        return [str(binary.with_name("python")), "-I", str(binary)]
+    return [str(binary)]
 
 
 def _write_status(
@@ -102,7 +111,7 @@ def run_dbt_test(**context: object) -> None:
     batch_id = str(params["batch_id"])
     started_at = datetime.now(UTC)
     cmd = [
-        _dbt_binary(),
+        *_dbt_command(),
         "test",
         "--project-dir",
         DBT_DIR,
@@ -237,8 +246,9 @@ with DAG(
     dbt_run = BashOperator(
         task_id="dbt_run",
         bash_command=(
-            f"cd {PROJECT_DIR} && {_dbt_binary()} seed "
-            f"--project-dir {DBT_DIR} --profiles-dir {DBT_DIR} && {_dbt_binary()} run "
+            f"cd {PROJECT_DIR} && {shlex.join(_dbt_command())} seed "
+            f"--project-dir {DBT_DIR} --profiles-dir {DBT_DIR} "
+            f"&& {shlex.join(_dbt_command())} run "
             f"--project-dir {DBT_DIR} --profiles-dir {DBT_DIR}"
         ),
         execution_timeout=timedelta(hours=2),
