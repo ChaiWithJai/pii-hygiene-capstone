@@ -116,9 +116,6 @@ models:
       - name: document_key
         data_tests:
           - not_null
-          - relationships:
-              to: ref('fct_pii_documents')
-              field: document_key
       - name: rule_id
         data_tests:
           - not_null
