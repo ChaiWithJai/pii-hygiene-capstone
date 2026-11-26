@@ -16,3 +16,6 @@ quarantined 13.93% of inspected rows, exceeding the 5% threshold. Calling the
 agent directly after recording the failed result produced one
 `BLOCKED_DQ_FAIL` audit row. These isolated demonstrations did not modify the
 Airflow scale-run warehouse.
+
+The Streamlit reviewer approved the sample queue task against the same database.
+The queue row changed from `OPEN` to `APPROVED` and received a review timestamp.

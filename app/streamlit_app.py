@@ -1007,7 +1007,7 @@ def render_pipeline_health(cache_key: str) -> None:
         display["last_refreshed_at"] = display["last_refreshed_at"].map(
             format_timestamp
         )
-        st.dataframe(display, width="stretch", hide_index=True)
+        st.dataframe(display, use_container_width=True, hide_index=True)
         st.caption(
             "Grain: one row per source document (`COUNT(DISTINCT document_key)`). "
             "Span facts live in `marts.fct_pii_spans` and are counted separately."
@@ -1041,7 +1041,7 @@ def render_pipeline_health(cache_key: str) -> None:
             display["duration_seconds"] = display["duration_seconds"].map(
                 lambda value: f"{safe_float(value):.1f}s"
             )
-            st.dataframe(display, width="stretch", hide_index=True)
+            st.dataframe(display, use_container_width=True, hide_index=True)
     with right:
         st.subheader("Quarantine by failure reason")
         reasons = query(
@@ -1061,7 +1061,7 @@ def render_pipeline_health(cache_key: str) -> None:
             display["quarantined_rows"] = display["quarantined_rows"].map(
                 format_count
             )
-            st.dataframe(display, width="stretch", hide_index=True)
+            st.dataframe(display, use_container_width=True, hide_index=True)
 
     st.subheader("Orchestration")
     st.markdown(
@@ -1149,7 +1149,7 @@ def render_corpus_risk(cache_key: str) -> None:
             figure.update_layout(
                 showlegend=False, height=380, margin={"t": 60, "b": 40}
             )
-            st.plotly_chart(figure, width="stretch")
+            st.plotly_chart(figure, use_container_width=True)
             st.caption(
                 "Density = span_count * 100 / NULLIF(text_char_length, 0). "
                 "Documents above 2.5 are candidates for redaction review."
@@ -1179,8 +1179,8 @@ def render_corpus_risk(cache_key: str) -> None:
                 },
             )
             figure.update_layout(height=380, margin={"t": 30, "b": 40})
-            st.plotly_chart(figure, width="stretch")
-            st.dataframe(tiers, width="stretch", hide_index=True)
+            st.plotly_chart(figure, use_container_width=True)
+            st.dataframe(tiers, use_container_width=True, hide_index=True)
 
     st.subheader("Quarantine counts for this filter")
     quarantine = query(
@@ -1196,7 +1196,7 @@ def render_corpus_risk(cache_key: str) -> None:
             "apply to rejected rows."
         )
     else:
-        st.dataframe(quarantine, width="stretch", hide_index=True)
+        st.dataframe(quarantine, use_container_width=True, hide_index=True)
 
     st.divider()
     st.subheader("ML evaluation slices (95 percent bootstrap CI)")
@@ -1276,7 +1276,7 @@ def render_corpus_risk(cache_key: str) -> None:
                     "pr_auc",
                 ]
             ],
-            width="stretch",
+            use_container_width=True,
             hide_index=True,
         )
 
@@ -1311,7 +1311,7 @@ def render_corpus_risk(cache_key: str) -> None:
             legend_title="detector",
             margin={"t": 30, "b": 80},
         )
-        st.plotly_chart(figure, width="stretch")
+        st.plotly_chart(figure, use_container_width=True)
 
     st.subheader("Confusion matrix")
     confusion = query(
@@ -1389,7 +1389,7 @@ def render_corpus_risk(cache_key: str) -> None:
                 title=f"{selected_model} | {selected_entity} | {selected_pair}",
                 margin={"t": 50, "b": 40},
             )
-            st.plotly_chart(figure, width="stretch")
+            st.plotly_chart(figure, use_container_width=True)
             st.caption(
                 "Counts come from `marts.fct_ml_confusion`. TP/FP/FN/TN are "
                 "span-level matches on the held-out test split."
@@ -1433,7 +1433,7 @@ def render_corpus_risk(cache_key: str) -> None:
         )
         display["docs_evaluated"] = display["docs_evaluated"].map(format_count)
         display["evaluated_at"] = display["evaluated_at"].map(format_timestamp)
-        st.dataframe(display, width="stretch", hide_index=True)
+        st.dataframe(display, use_container_width=True, hide_index=True)
 
 
 def render_traceability(cache_key: str) -> None:
@@ -1666,7 +1666,7 @@ def render_source_page(
             f"{uri} | page {page_number} | bbox "
             f"{list(bbox) if bbox else 'n/a'} (200 DPI page pixels)"
         ),
-        width="stretch",
+        use_container_width=True,
     )
     if suffix != ".pdf" and file_type.lower() != "pdf":
         st.caption("PNG pixels equal the 200 DPI page coordinate space.")
@@ -1726,7 +1726,7 @@ def render_agent_actions(cache_key: str) -> None:
             "```bash\npython -m agent.triage_agent --max-actions 40\n```"
         )
     else:
-        st.dataframe(counts, width="stretch", hide_index=True)
+        st.dataframe(counts, use_container_width=True, hide_index=True)
 
     actions = query(
         ACTION_LOG_SQL,
@@ -1749,7 +1749,7 @@ def render_agent_actions(cache_key: str) -> None:
     if not actions.empty:
         display = actions.drop(columns=["evidence_json"]).copy()
         display["executed_at"] = display["executed_at"].map(format_timestamp)
-        st.dataframe(display, width="stretch", hide_index=True)
+        st.dataframe(display, use_container_width=True, hide_index=True)
 
         st.markdown("**Evidence for recent actions**")
         for _, row in actions.head(25).iterrows():
@@ -1783,7 +1783,7 @@ def render_agent_actions(cache_key: str) -> None:
         QUEUE_STATUS_COUNTS_SQL, {}, cache_key, columns=["status", "tasks"]
     )
     if not queue_counts.empty:
-        st.dataframe(queue_counts, width="stretch", hide_index=True)
+        st.dataframe(queue_counts, use_container_width=True, hide_index=True)
 
     reviewer = st.text_input(
         "Reviewer name", value="streamlit_reviewer", key="reviewer_name"
