@@ -106,6 +106,9 @@ def normalize_source_row(
 ) -> dict[str, Any]:
     """Normalize one row across the known public and fixture source shapes."""
     record_id = str(row.get("uid") or row.get("id") or row.get("record_id") or fallback_record_id)
+    if source_dataset == SOURCE_DATASETS["nemotron"] and row.get("locale") and row.get("uid"):
+        # Nemotron reuses its UIDs across locales for different documents.
+        record_id = json.dumps([row["locale"], record_id], separators=(",", ":"))
     text = (
         row.get("raw_text") or row.get("source_text") or row.get("unmasked_text")
         or row.get("text") or row.get("sentence")
@@ -201,7 +204,9 @@ def build_batch(
         ) -> Iterator[dict[str, Any]]:
             for index, row in enumerate(source_rows):
                 try:
-                    effective_dataset = str(row.get("source_dataset") or source_dataset)
+                    effective_dataset = source_dataset
+                    if input_name.startswith("fixture_"):
+                        effective_dataset = str(row.get("source_dataset") or source_dataset)
                     if input_name == "synthetic_pii_scope":
                         row = {**row, "id": f"synth-{index:05d}"}
                     yield normalize_source_row(

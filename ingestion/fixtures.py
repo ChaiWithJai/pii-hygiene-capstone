@@ -403,7 +403,7 @@ def make_pii_scope_fixture(n: int = 8030) -> Iterator[dict[str, Any]]:
         paragraphs.append(_FILLER)
         text, spans = render_template_sequence(paragraphs, rng)
         yield {
-            "id": f"pii-scope-{index + 1:05d}",
+            "id": f"synth-pii-scope-{index + 1:05d}",
             "text": text,
             "privacy_mask": spans,
             "language": PII_SCOPE_LANGUAGES[0],
@@ -456,7 +456,8 @@ def make_offline_source_rows(rows_per_source: int = 3) -> dict[str, list[dict[st
                 "Reference {ACCOUNT_NUMBER}."
             )
             text, spans = render_template(template, rng)
-            record_id = f"fixture-{source}-{index + 1:03d}"
+            prefix = "synth" if source == "pii_scope" else "fixture"
+            record_id = f"{prefix}-{source}-{index + 1:03d}"
             rows[source].append(
                 {
                     "id": record_id,

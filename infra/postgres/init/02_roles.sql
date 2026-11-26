@@ -24,6 +24,9 @@ END
 $$;
 
 GRANT ALL PRIVILEGES ON DATABASE pii_lab TO pii_admin;
+-- Compose's default 64 MiB /dev/shm cannot support scale-run parallel hashes.
+ALTER ROLE pii_admin IN DATABASE pii_lab SET max_parallel_workers_per_gather = 0;
+ALTER ROLE pii_admin IN DATABASE pii_lab SET work_mem = '64MB';
 GRANT CONNECT ON DATABASE pii_lab TO streamlit_reader, reviewer, agent_service;
 GRANT CREATE, USAGE ON SCHEMA raw, staging, intermediate, marts, quarantine, governance TO pii_admin;
 GRANT ALL ON ALL TABLES IN SCHEMA raw, staging, intermediate, marts, quarantine, governance TO pii_admin;

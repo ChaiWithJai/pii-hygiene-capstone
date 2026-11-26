@@ -129,10 +129,9 @@ def extract_batch(batch_id: str, data_dir: Path, limit: int | None = None) -> li
         path = source_dir / entry["filename"]
         relative_path = entry.get("relative_file_path", entry["filename"])
         doc_key = hashlib.sha256(f"unstructured|{batch_id}|{relative_path}".encode()).hexdigest()
-        span_index = 0
         for page_number, image in enumerate(_images(path), start=1):
             text, words = _ocr_page(image)
-            for start, end, value, label in find_candidates(text):
+            for span_index, (start, end, value, label) in enumerate(find_candidates(text)):
                 bbox, confidence = _bbox_and_confidence(words, start, end)
                 extraction_key = hashlib.sha256(
                     f"{doc_key}|{page_number}|{span_index}".encode()
@@ -158,7 +157,6 @@ def extract_batch(batch_id: str, data_dir: Path, limit: int | None = None) -> li
                         "is_ocr_perturbed": bool(entry.get("perturbed", False)),
                     }
                 )
-                span_index += 1
     staged_dir = data_dir / "staged" / batch_id
     staged_dir.mkdir(parents=True, exist_ok=True)
     if rows:

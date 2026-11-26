@@ -1,6 +1,11 @@
-with batch_totals as (
+with raw_rows as (
+    select batch_id from {{ source('raw', 'pii_documents_raw') }}
+    union all
+    select batch_id from {{ source('raw', 'unstructured_extractions_raw') }}
+),
+batch_totals as (
     select batch_id, count(*) as total_count
-    from {{ source('raw', 'pii_documents_raw') }}
+    from raw_rows
     group by batch_id
 ),
 quarantined as (

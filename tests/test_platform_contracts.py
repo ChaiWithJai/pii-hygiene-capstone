@@ -101,3 +101,17 @@ def test_public_corpus_schema_variants_keep_ground_truth() -> None:
         assert result["raw_text"] == "Jane"
         assert result["source_dataset"] == "fixture/schema"
         assert result["spans_json"][0]["value"] == "Jane"
+
+
+def test_nemotron_reused_uids_do_not_merge_locales() -> None:
+    from ingestion.build_batches import normalize_source_row
+
+    keys = {
+        normalize_source_row(
+            {"uid": "shared-id", "locale": locale, "text": "Sample"},
+            batch_id="schema_test", source_dataset="nvidia/Nemotron-PII",
+            source_format="PARQUET", fallback_record_id="unused",
+        )["document_key"]
+        for locale in ("us", "intl")
+    }
+    assert len(keys) == 2

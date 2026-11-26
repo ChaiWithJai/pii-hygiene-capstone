@@ -78,9 +78,9 @@ def generate_documents(batch_id: str, count: int, data_dir: Path) -> list[dict[s
     doc_types = tuple(DOC_TYPE_META)
     for index in range(count):
         doc_type = doc_types[index % len(doc_types)]
-        file_type = "pdf" if rng.random() < 0.60 else "png"
+        file_type = "pdf" if index % 10 < 6 else "png"
         pages = rng.randint(1, 2) if file_type == "pdf" else 1
-        perturbed = rng.random() < 0.50
+        perturbed = index % 2 == 0
         templates = choose_document_templates(doc_type, rng, pages)
         rendered = [render_template(template, rng)[0] for template in templates]
         if perturbed:

@@ -17,6 +17,7 @@ DOWNLOADS: tuple[tuple[str, str, str], ...] = (
     ("nvidia/Nemotron-PII", "nemotron_train.parquet", "train.parquet"),
     ("mks-logic/SPY", "spy_medical.jsonl", "medical.jsonl"),
     ("mks-logic/SPY", "spy_legal.jsonl", "legal.jsonl"),
+    ("Protegrity/pii-scope", "pii_scope/pii_scope.csv", "pii_scope.csv"),
 )
 
 

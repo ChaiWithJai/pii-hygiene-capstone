@@ -6,6 +6,7 @@ import json
 
 import pyarrow.parquet as pq
 
+import ingestion.ocr_extract_worker as ocr_worker
 from ingestion import SOURCE_DATASETS, document_key, span_validation_error
 from ingestion.build_batches import build_batch, normalize_source_row
 from ingestion.fixtures import (
@@ -13,6 +14,7 @@ from ingestion.fixtures import (
     make_offline_source_rows,
     write_offline_source_fixtures,
 )
+from ingestion.generate_unstructured_docs import generate_documents
 from ingestion.inject_bad_records import create_injected_rows, write_injected_batch
 from ingestion.ocr_extract_worker import find_candidates
 
@@ -23,6 +25,8 @@ def test_offline_fixture_covers_all_formats_and_isolates_identities(tmp_path) ->
     assert len(set(SYNTHETIC_DATASETS.values())) == 4
     assert set(SYNTHETIC_DATASETS.values()).isdisjoint(SOURCE_DATASETS.values())
     assert pq.read_table(paths["nemotron"]).num_rows == 2
+    pii_scope_rows = paths["pii_scope"].read_text(encoding="utf-8").splitlines()
+    assert pii_scope_rows[1].startswith("synth-pii_scope-")
 
 
 def test_fixture_spans_are_exact_and_source_names_are_distinct() -> None:
@@ -87,3 +91,32 @@ def test_candidate_recognizers_return_aligned_spans() -> None:
     labels = {candidate[3] for candidate in candidates}
     assert {"PERSON", "EMAIL", "SSN"} <= labels
     assert all(text[start:end] == value for start, end, value, _ in candidates)
+
+
+def test_unstructured_generation_has_exact_format_and_perturbation_mix(tmp_path) -> None:
+    entries = generate_documents("unit", 10, tmp_path)
+    assert sum(entry["file_type"] == "pdf" for entry in entries) == 6
+    assert sum(entry["file_type"] == "png" for entry in entries) == 4
+    assert sum(entry["perturbed"] for entry in entries) == 5
+    assert {entry["doc_type"] for entry in entries} == {
+        "clinical_note",
+        "invoice",
+        "legal_notice",
+    }
+
+
+def test_ocr_batch_contract_without_system_tesseract(tmp_path, monkeypatch) -> None:
+    generate_documents("ocr-unit", 1, tmp_path)
+    text = "Email fake@example.com"
+    words = [
+        {"start": 0, "end": 5, "bbox": [1, 2, 20, 12], "confidence": 0.99},
+        {"start": 6, "end": 22, "bbox": [22, 2, 100, 12], "confidence": 0.91},
+    ]
+    monkeypatch.setattr(ocr_worker, "_images", lambda _path: [object()])
+    monkeypatch.setattr(ocr_worker, "_ocr_page", lambda _image: (text, words))
+    rows = ocr_worker.extract_batch("ocr-unit", tmp_path)
+    assert len(rows) == 1
+    assert rows[0]["source_format"] == "PDF/PNG"
+    assert rows[0]["source_file_uri"].startswith("local://unstructured/ocr-unit/")
+    assert rows[0]["bbox_json"] == [22, 2, 100, 12]
+    assert rows[0]["ocr_confidence"] == 0.91

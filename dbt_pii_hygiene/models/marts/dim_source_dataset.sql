@@ -13,5 +13,7 @@ with sources as (
 select
     {{ pii_hash('source_dataset') }} as source_dataset_key,
     source_dataset,
-    source_format
+    case when count(distinct source_format) = 1 then min(source_format)
+        else 'MULTIPLE' end as source_format
 from sources
+group by source_dataset

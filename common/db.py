@@ -6,6 +6,7 @@ import csv
 import io
 from collections.abc import Iterable, Iterator, Sequence
 from contextlib import contextmanager
+from itertools import islice
 from pathlib import Path
 from typing import Any
 
@@ -51,20 +52,25 @@ def copy_rows(
     """Bulk load rows with COPY FROM STDIN (fast path for 1M+ row batches)."""
     buffer = io.StringIO()
     writer = csv.writer(buffer, quoting=csv.QUOTE_MINIMAL)
-    count = 0
-    for row in rows:
-        if any(value == null for value in row):
-            raise ValueError("Bulk load value equals the configured NULL marker")
-        writer.writerow([null if value is None else value for value in row])
-        count += 1
-    buffer.seek(0)
     statement = sql.SQL("COPY {} ({}) FROM STDIN WITH (FORMAT csv, NULL {})").format(
         sql.Identifier(*table.split(".")),
         sql.SQL(", ").join(map(sql.Identifier, columns)),
         sql.Literal(null),
     )
+    count = 0
+    pending = iter(rows)
     with conn.cursor() as cur:
-        cur.copy_expert(statement.as_string(conn), buffer)
+        command = statement.as_string(conn)
+        while batch := list(islice(pending, 10_000)):
+            for row in batch:
+                if any(value == null for value in row):
+                    raise ValueError("Bulk load value equals the configured NULL marker")
+                writer.writerow([null if value is None else value for value in row])
+            buffer.seek(0)
+            cur.copy_expert(command, buffer)
+            buffer.seek(0)
+            buffer.truncate()
+            count += len(batch)
     return count
 
 

@@ -62,6 +62,12 @@ Open:
 - Streamlit: <http://localhost:8501>
 - Postgres: `127.0.0.1:5433`, database `pii_lab`
 
+On a fresh checkout, generate the offline fixtures before triggering the demo:
+
+```bash
+docker compose exec airflow-scheduler python -m ingestion.download_sources --offline-fixtures
+```
+
 In Airflow, unpause and trigger `pii_hygiene_pipeline`. For a fast demonstration, use:
 
 ```json
@@ -196,6 +202,9 @@ this README.
 | Audited agent decisions and review queue writes | **PENDING LOCAL RUN** | `make evidence` |
 | OTel span and OpenLineage event files | **PENDING LOCAL RUN** | `.venv/bin/python -m scripts.verify_acceptance` |
 | Snowflake / BigQuery / GCP / Kubernetes deployment | **UNVERIFIED CLOUD CLAIM** | No verified cloud run is supplied |
+
+See [local quarantine verification](docs/quarantine-verification.md) for the
+observed sample and circuit-breaker results.
 
 `make evidence` writes `docs/evidence.md` and records query results, generation time, Git
 revision, and warehouse endpoint. Review that file before citing any metric. The executable
