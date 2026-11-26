@@ -188,23 +188,12 @@ optional sandbox variables are set.
 
 ## Evidence
 
-Evidence is deliberately generated from the live local warehouse rather than hardcoded in
-this README.
-
-| Acceptance evidence | Status | Reproduction |
-|---|---|---|
-| 1M+ distinct validated documents at document grain | **PENDING LOCAL RUN** | Run the proof query above |
-| Four source corpora and structured formats | **PENDING LOCAL RUN** | `make evidence` |
-| PDF/PNG OCR provenance with page, bbox, and confidence | **PENDING LOCAL RUN** | `make evidence` |
-| Quarantine isolation and zero leakage to marts | **PENDING LOCAL RUN** | `make quarantine-demo && make evidence` |
-| Circuit breaker above the configured threshold | **PENDING LOCAL RUN** | `make flood-demo` |
-| ML slices, bootstrap CIs, and operational metrics | **PENDING LOCAL RUN** | `make evidence` |
-| Audited agent decisions and review queue writes | **PENDING LOCAL RUN** | `make evidence` |
-| OTel span and OpenLineage event files | **PENDING LOCAL RUN** | `.venv/bin/python -m scripts.verify_acceptance` |
-| Snowflake / BigQuery / GCP / Kubernetes deployment | **UNVERIFIED CLOUD CLAIM** | No verified cloud run is supplied |
-
-See [local quarantine verification](docs/quarantine-verification.md) for the
-observed sample and circuit-breaker results.
+The [Docker Compose scale run](docs/scale-verification.md) completed with
+1,375,254 distinct validated documents, 500 OCR source files, and 39 audited
+review tasks. See [local quarantine verification](docs/quarantine-verification.md)
+for the separate bad-record and circuit-breaker demonstrations.
+The scale run used a synthetic CSV stand-in for gated PII-SCOPE. Cloud
+deployments have not been verified.
 
 `make evidence` writes `docs/evidence.md` and records query results, generation time, Git
 revision, and warehouse endpoint. Review that file before citing any metric. The executable
