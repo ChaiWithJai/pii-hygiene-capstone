@@ -1,0 +1,28 @@
+# Runtime dependencies for ingestion, dbt, OCR, ML evaluation and the agent.
+# Pinned for deterministic container builds.
+pandas==2.1.4
+numpy==1.26.4
+pyarrow==19.0.0
+psycopg2-binary==2.9.10
+python-dotenv==1.0.1
+requests==2.32.3
+pydantic==2.10.6
+
+# unstructured document generation + OCR
+reportlab==4.2.5
+Pillow==10.4.0
+pytesseract==0.3.13
+PyMuPDF==1.24.14
+
+# evaluation loop
+scikit-learn==1.5.2
+spacy==3.7.5
+
+# observability (OTel trace propagation; OpenLineage events are emitted as JSON)
+opentelemetry-api==1.27.0
+opentelemetry-sdk==1.27.0
+opentelemetry-exporter-otlp-proto-http==1.27.0
+
+# tooling
+pytest==8.3.4
+ruff==0.5.5

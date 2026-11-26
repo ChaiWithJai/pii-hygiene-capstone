@@ -1,0 +1,89 @@
+# UNVERIFIED example workloads. Replace image names and provision secrets first.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pii-streamlit
+  namespace: pii-hygiene
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: pii-streamlit}
+  template:
+    metadata:
+      labels: {app: pii-streamlit}
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/REPLACE_ME/pii-hygiene-app:REPLACE_WITH_IMMUTABLE_TAG
+          imagePullPolicy: IfNotPresent
+          ports:
+            - {name: http, containerPort: 8501}
+          envFrom:
+            - secretRef: {name: pii-reviewer-runtime}
+          env:
+            - {name: PII_DATA_DIR, value: /opt/pii/data}
+          readinessProbe:
+            httpGet: {path: /_stcore/health, port: http}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /_stcore/health, port: http}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 250m, memory: 512Mi}
+            limits: {cpu: "1", memory: 2Gi}
+          volumeMounts:
+            - {name: artifacts, mountPath: /opt/pii/data, readOnly: true}
+      volumes:
+        - name: artifacts
+          persistentVolumeClaim: {claimName: pii-artifacts}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pii-streamlit
+  namespace: pii-hygiene
+spec:
+  type: ClusterIP
+  selector: {app: pii-streamlit}
+  ports:
+    - {name: http, port: 8501, targetPort: http}
+---
+# This warm worker is optional. Airflow KubernetesExecutor tasks should normally
+# launch one-shot pods from the same image. Operators can exec into this deployment
+# for nonproduction diagnostics; it performs no work on its own.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pii-worker
+  namespace: pii-hygiene
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: pii-worker}
+  template:
+    metadata:
+      labels: {app: pii-worker}
+    spec:
+      serviceAccountName: pii-worker
+      containers:
+        - name: worker
+          image: ghcr.io/REPLACE_ME/pii-hygiene-worker:REPLACE_WITH_IMMUTABLE_TAG
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args: ["trap : TERM INT; sleep infinity & wait"]
+          envFrom:
+            - secretRef: {name: pii-runtime}
+          env:
+            - {name: PII_DATA_DIR, value: /opt/pii/data}
+            - {name: OTEL_EXPORTER_OTLP_ENDPOINT, value: "http://otel-collector:4318"}
+            - {name: OPENLINEAGE_URL, value: ""}
+          resources:
+            requests: {cpu: 250m, memory: 512Mi}
+            limits: {cpu: "4", memory: 8Gi}
+          volumeMounts:
+            - {name: artifacts, mountPath: /opt/pii/data}
+      volumes:
+        - name: artifacts
+          persistentVolumeClaim: {claimName: pii-artifacts}

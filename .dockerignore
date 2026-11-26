@@ -1,0 +1,10 @@
+.git
+.env
+.venv
+data
+_raw
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+dbt_pii_hygiene/target
+dbt_pii_hygiene/logs

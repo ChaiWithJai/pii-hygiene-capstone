@@ -1,0 +1,146 @@
+match_key,raw_entity_label,canonical_entity_label,privacy_tier,is_high_risk,description
+api_key,api_key,API_KEY,credential_secret,1,API key / machine credential.
+b-username,B-USERNAME,USERNAME,credential_secret,1,Username / handle (SPY).
+cvv,cvv,CVV,credential_secret,1,Card security code.
+http_cookie,http_cookie,HTTP_COOKIE,credential_secret,1,HTTP cookie value (session credential).
+i-username,I-USERNAME,USERNAME,credential_secret,1,Username / handle (SPY).
+password,PASSWORD,PASSWORD,credential_secret,1,Account password or passphrase.
+pin,pin,PIN,credential_secret,1,Personal identification number.
+user_name,user_name,USERNAME,credential_secret,1,Account username / login handle.
+username,USERNAME,USERNAME,credential_secret,1,Account username / login handle.
+address,ADDRESS,ADDRESS,direct_identifier,0,Postal address (SPY).
+b-address,B-ADDRESS,ADDRESS,direct_identifier,0,Postal address (SPY).
+b-email,B-EMAIL,EMAIL,direct_identifier,0,Email address (SPY).
+b-name,B-NAME,PERSON_NAME,direct_identifier,0,Person name (SPY).
+b-phone_num,B-PHONE_NUM,PHONE,direct_identifier,0,Telephone number (SPY).
+b-url,B-URL,URL,direct_identifier,0,Web URL (SPY).
+buildingnum,BUILDINGNUM,ADDRESS,direct_identifier,0,Building number component of a postal address.
+coordinate,coordinate,COORDINATE,direct_identifier,0,Geographic coordinate.
+date_of_birth,date_of_birth,DATE_OF_BIRTH,direct_identifier,0,Date of birth.
+device_id,DEVICE_ID,DEVICE_IDENTIFIER,direct_identifier,0,Device identifier.
+device_identifier,device_identifier,DEVICE_IDENTIFIER,direct_identifier,0,Device identifier.
+dob,DOB,DATE_OF_BIRTH,direct_identifier,0,Date of birth.
+doctorname,DOCTORNAME,PERSON_NAME,direct_identifier,0,Clinician personal name.
+email,EMAIL,EMAIL,direct_identifier,0,Email address.
+email_address,EMAIL_ADDRESS,EMAIL,direct_identifier,0,Email address.
+employee_id,employee_id,EMPLOYEE_ID,direct_identifier,0,Employee identifier.
+fax,FAX,FAX,direct_identifier,0,Fax number.
+fax_number,fax_number,FAX,direct_identifier,0,Fax number.
+first_name,first_name,FIRST_NAME,direct_identifier,0,Given / first name.
+full_name,FULL_NAME,PERSON_NAME,direct_identifier,0,Full person name.
+givenname,GIVENNAME,FIRST_NAME,direct_identifier,0,Given / first name.
+hospitalname,HOSPITALNAME,ORGANIZATION,direct_identifier,0,Hospital or care facility name.
+i-address,I-ADDRESS,ADDRESS,direct_identifier,0,Postal address (SPY).
+i-email,I-EMAIL,EMAIL,direct_identifier,0,Email address (SPY).
+i-name,I-NAME,PERSON_NAME,direct_identifier,0,Person name (SPY).
+i-phone_num,I-PHONE_NUM,PHONE,direct_identifier,0,Telephone number (SPY).
+i-url,I-URL,URL,direct_identifier,0,Web URL (SPY).
+ip_address,IP_ADDRESS,IP_ADDRESS,direct_identifier,0,IP address.
+ipv4,IPV4,IP_ADDRESS,direct_identifier,0,IPv4 address.
+ipv6,ipv6,IP_ADDRESS,direct_identifier,0,IPv6 address.
+last_name,last_name,LAST_NAME,direct_identifier,0,Family / last name.
+license_plate,license_plate,LICENSE_PLATE,direct_identifier,0,Vehicle licence plate.
+mac_address,mac_address,MAC_ADDRESS,direct_identifier,0,Network hardware address.
+macaddress,MACADDRESS,MAC_ADDRESS,direct_identifier,0,Network hardware address.
+middle_name,MIDDLE_NAME,MIDDLE_NAME,direct_identifier,0,Middle name.
+name,NAME,PERSON_NAME,direct_identifier,0,Person name (SPY).
+person,PERSON,PERSON_NAME,direct_identifier,0,Person name.
+person_name,PERSON_NAME,PERSON_NAME,direct_identifier,0,Person name.
+phone,PHONE,PHONE,direct_identifier,0,Phone number.
+phone_num,PHONE_NUM,PHONE,direct_identifier,0,Telephone number (SPY).
+phone_number,phone_number,PHONE,direct_identifier,0,Telephone number.
+street,STREET,ADDRESS,direct_identifier,0,Street address line.
+street_address,street_address,ADDRESS,direct_identifier,0,Street address.
+surname,SURNAME,LAST_NAME,direct_identifier,0,Family / last name.
+telephonenum,TELEPHONENUM,PHONE,direct_identifier,0,Telephone number.
+unique_id,unique_id,UNIQUE_ID,direct_identifier,0,Generic unique record identifier.
+url,URL,URL,direct_identifier,0,Web URL that may embed identifiers.
+vehicle_identifier,vehicle_identifier,VEHICLE_IDENTIFIER,direct_identifier,0,Vehicle identifier (VIN).
+age,AGE,AGE,quasi_identifier,0,Age value or age range.
+airport_code,AIRPORT_CODE,LOCATION,quasi_identifier,0,Airport code.
+airportcode,AIRPORTCODE,LOCATION,quasi_identifier,0,IATA airport location code.
+city,CITY,CITY,quasi_identifier,0,City or locality name.
+company_name,company_name,ORGANIZATION,quasi_identifier,0,Company / employer name.
+country,COUNTRY,COUNTRY,quasi_identifier,0,Country name or code.
+county,county,COUNTY,quasi_identifier,0,County / administrative region.
+currency,CURRENCY,CURRENCY,quasi_identifier,0,Currency code or name.
+date,DATE,DATE,quasi_identifier,0,Calendar date that is not a date of birth.
+date_time,date_time,DATE_TIME,quasi_identifier,0,Combined date and time.
+education_level,education_level,EDUCATION_LEVEL,quasi_identifier,0,Education level.
+employment_status,employment_status,EMPLOYMENT_STATUS,quasi_identifier,0,Employment status.
+gender,GENDER,GENDER,quasi_identifier,0,Gender value.
+height,HEIGHT,HEIGHT,quasi_identifier,0,Height measurement.
+job_title,JOB_TITLE,JOB_TITLE,quasi_identifier,0,Job title.
+jobtitle,JOBTITLE,JOB_TITLE,quasi_identifier,0,Job title.
+jobtype,JOBTYPE,EMPLOYMENT_STATUS,quasi_identifier,0,Employment type / status.
+language,language,LANGUAGE,quasi_identifier,0,Language preference.
+occupation,occupation,OCCUPATION,quasi_identifier,0,Occupation.
+org,ORG,ORGANIZATION,quasi_identifier,0,Organisation name.
+organisation,ORGANISATION,ORGANIZATION,quasi_identifier,0,Organisation name.
+organization,ORGANIZATION,ORGANIZATION,quasi_identifier,0,Organisation name.
+postal_code,POSTAL_CODE,POSTAL_CODE,quasi_identifier,0,Postal code.
+postcode,postcode,POSTAL_CODE,quasi_identifier,0,Postal code.
+sex,SEX,SEX,quasi_identifier,0,Sex value.
+state,state,STATE,quasi_identifier,0,State / province.
+time,TIME,TIME,quasi_identifier,0,Clock time.
+timezone,TIMEZONE,TIMEZONE,quasi_identifier,0,Time zone.
+title,TITLE,TITLE,quasi_identifier,0,Honorific or courtesy title.
+weight,WEIGHT,WEIGHT,quasi_identifier,0,Weight measurement.
+zip_code,ZIP_CODE,POSTAL_CODE,quasi_identifier,0,ZIP / postal code.
+zipcode,ZIPCODE,POSTAL_CODE,quasi_identifier,0,Postal / ZIP code.
+account_number,account_number,BANK_ACCOUNT,sensitive_phi_financial,1,Bank or financial account number.
+accountnum,ACCOUNTNUM,BANK_ACCOUNT,sensitive_phi_financial,1,Bank or financial account number.
+allergies,ALLERGIES,MEDICAL_CONDITION,sensitive_phi_financial,1,Allergy / medical condition detail.
+amount,AMOUNT,AMOUNT,sensitive_phi_financial,1,Monetary amount tied to a person or account.
+b-id_num,B-ID_NUM,NATIONAL_ID,sensitive_phi_financial,1,Government / identity number (SPY).
+bank_account,BANK_ACCOUNT,BANK_ACCOUNT,sensitive_phi_financial,1,Bank account number.
+bank_routing_number,bank_routing_number,ROUTING_NUMBER,sensitive_phi_financial,1,Bank routing / ABA number.
+city_state,CITY_STATE,LOCATION,quasi_identifier,0,Combined city and state location.
+iban,IBAN,BANK_ACCOUNT,sensitive_phi_financial,1,International bank account number.
+iso_date,ISO_DATE,DATE,quasi_identifier,0,Calendar date represented in ISO format.
+service,SERVICE,SERVICE,quasi_identifier,0,Service or line-item description linked to a record.
+zip,ZIP,POSTAL_CODE,quasi_identifier,0,ZIP / postal code.
+bankname,BANKNAME,ORGANIZATION,sensitive_phi_financial,1,Financial institution name linked to an account.
+biometric,BIOMETRIC,BIOMETRIC_IDENTIFIER,sensitive_phi_financial,1,Biometric identifier.
+biometric_identifier,biometric_identifier,BIOMETRIC_IDENTIFIER,sensitive_phi_financial,1,Biometric template or identifier.
+blood_type,blood_type,BLOOD_TYPE,sensitive_phi_financial,1,Blood type (health attribute).
+certificate_license_number,certificate_license_number,CERTIFICATE_LICENSE_NUMBER,sensitive_phi_financial,1,Professional certificate or licence number.
+credit_card,CREDIT_CARD,CREDIT_CARD,sensitive_phi_financial,1,Payment card number.
+credit_card_number,CREDIT_CARD_NUMBER,CREDIT_CARD,sensitive_phi_financial,1,Payment card number.
+credit_debit_card,credit_debit_card,CREDIT_CARD,sensitive_phi_financial,1,Credit or debit card number.
+creditcardnumber,CREDITCARDNUMBER,CREDIT_CARD,sensitive_phi_financial,1,Payment card number.
+customer_id,customer_id,CUSTOMER_ID,sensitive_phi_financial,1,Customer identifier.
+driver_license,DRIVER_LICENSE,DRIVER_LICENSE,sensitive_phi_financial,1,Driver licence number.
+driver_license_number,DRIVER_LICENSE_NUMBER,DRIVER_LICENSE,sensitive_phi_financial,1,Driver licence number.
+driverlicensenum,DRIVERLICENSENUM,DRIVER_LICENSE,sensitive_phi_financial,1,Driver licence number.
+drivers_license,DRIVERS_LICENSE,DRIVER_LICENSE,sensitive_phi_financial,1,Driver licence number.
+health_plan_beneficiary_number,health_plan_beneficiary_number,HEALTH_PLAN_ID,sensitive_phi_financial,1,Health plan beneficiary identifier.
+health_plan_id,HEALTH_PLAN_ID,HEALTH_PLAN_ID,sensitive_phi_financial,1,Health plan identifier.
+i-id_num,I-ID_NUM,NATIONAL_ID,sensitive_phi_financial,1,Government / identity number (SPY).
+id_num,ID_NUM,NATIONAL_ID,sensitive_phi_financial,1,Government / identity number (SPY).
+idcardnum,IDCARDNUM,NATIONAL_ID,sensitive_phi_financial,1,Government identity card number.
+insurance_id,INSURANCE_ID,INSURANCE_ID,sensitive_phi_financial,1,Insurance identifier.
+medical_condition,MEDICAL_CONDITION,MEDICAL_CONDITION,sensitive_phi_financial,1,Medical condition.
+medical_record,MEDICAL_RECORD,MEDICAL_RECORD_NUMBER,sensitive_phi_financial,1,Medical record number.
+medical_record_number,medical_record_number,MEDICAL_RECORD_NUMBER,sensitive_phi_financial,1,Medical record number (MRN).
+medication,MEDICATION,MEDICATION,sensitive_phi_financial,1,Prescription or medication detail.
+mrn,MRN,MEDICAL_RECORD_NUMBER,sensitive_phi_financial,1,Medical record number.
+national_id,national_id,NATIONAL_ID,sensitive_phi_financial,1,National identity number.
+passport,PASSPORT,PASSPORT,sensitive_phi_financial,1,Passport number.
+passport_number,PASSPORT_NUMBER,PASSPORT,sensitive_phi_financial,1,Passport number.
+passportnum,PASSPORTNUM,PASSPORT,sensitive_phi_financial,1,Passport number.
+policy_number,POLICY_NUMBER,POLICY_NUMBER,sensitive_phi_financial,1,Policy number.
+policynum,POLICYNUM,POLICY_NUMBER,sensitive_phi_financial,1,Insurance policy number.
+political_view,political_view,POLITICAL_VIEW,sensitive_phi_financial,1,Special-category political belief.
+race_ethnicity,race_ethnicity,RACE_ETHNICITY,sensitive_phi_financial,1,Special-category race / ethnicity.
+religious_belief,religious_belief,RELIGIOUS_BELIEF,sensitive_phi_financial,1,Special-category religious belief.
+routing_number,ROUTING_NUMBER,ROUTING_NUMBER,sensitive_phi_financial,1,Bank routing number.
+salary,SALARY,SALARY,sensitive_phi_financial,1,Salary or compensation amount.
+sexuality,sexuality,SEXUALITY,sensitive_phi_financial,1,Special-category sexual orientation.
+social_security_number,SOCIAL_SECURITY_NUMBER,SSN,sensitive_phi_financial,1,Social security number.
+socialnum,SOCIALNUM,SSN,sensitive_phi_financial,1,National social security number.
+ssn,ssn,SSN,sensitive_phi_financial,1,Social security number.
+swift_bic,swift_bic,SWIFT_BIC,sensitive_phi_financial,1,SWIFT / BIC bank identifier.
+tax_id,tax_id,TAX_ID,sensitive_phi_financial,1,Tax identifier.
+tax_number,TAX_NUMBER,TAX_ID,sensitive_phi_financial,1,Tax identifier.
+taxnum,TAXNUM,TAX_ID,sensitive_phi_financial,1,Tax identifier.

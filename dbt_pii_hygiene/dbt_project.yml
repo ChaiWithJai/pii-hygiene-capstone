@@ -1,0 +1,42 @@
+name: dbt_pii_hygiene
+version: 1.0.0
+config-version: 2
+
+profile: dbt_pii_hygiene
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: target
+clean-targets:
+  - target
+  - dbt_packages
+
+vars:
+  batch_id: "{{ env_var('PII_BATCH_ID', 'local_dev_001') }}"
+  quarantine_threshold: "{{ env_var('PII_QUARANTINE_THRESHOLD', '0.05') }}"
+
+models:
+  dbt_pii_hygiene:
+    +on_schema_change: fail
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: table
+    quarantine:
+      +schema: quarantine
+      +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table
+
+seeds:
+  dbt_pii_hygiene:
+    +schema: staging
+    +quote_columns: false

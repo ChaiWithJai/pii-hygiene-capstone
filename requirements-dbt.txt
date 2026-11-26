@@ -1,0 +1,4 @@
+# dbt runtime is installed in its own virtualenv so it can never conflict
+# with Airflow's pinned dependency set.
+dbt-core==1.9.1
+dbt-postgres==1.9.0

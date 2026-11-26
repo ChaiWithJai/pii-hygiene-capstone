@@ -1,0 +1,14 @@
+dbt_pii_hygiene:
+  target: "{{ env_var('DBT_TARGET', 'postgres') }}"
+  outputs:
+    postgres:
+      type: postgres
+      host: "{{ env_var('PII_DB_HOST', '127.0.0.1') }}"
+      port: "{{ env_var('PII_DB_PORT', '5433') | int }}"
+      dbname: "{{ env_var('PII_DB_NAME', 'pii_lab') }}"
+      schema: public
+      user: "{{ env_var('PII_DB_USER', 'pii_admin') }}"
+      password: "{{ env_var('PII_DB_PASSWORD', 'pii_admin_pw') }}"
+      threads: "{{ env_var('DBT_THREADS', '4') | int }}"
+      connect_timeout: 10
+      keepalives_idle: 0

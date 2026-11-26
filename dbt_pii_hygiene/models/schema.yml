@@ -1,0 +1,127 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: pii_documents_raw
+      - name: unstructured_extractions_raw
+      - name: edge_case_rules_raw
+      - name: ml_data_audit_raw
+      - name: ml_eval_slices_raw
+      - name: ml_confusion_raw
+      - name: ml_operational_raw
+
+models:
+  - name: fct_pii_documents
+    description: One row per validated document key, using its latest clean batch.
+    columns:
+      - name: document_key
+        data_tests:
+          - unique
+          - not_null
+      - name: source_dataset_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_source_dataset')
+              field: source_dataset_key
+      - name: locale_domain_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_locale_domain')
+              field: locale_domain_key
+
+  - name: fct_pii_spans
+    description: Validated PII spans belonging to the selected document version.
+    columns:
+      - name: span_key
+        data_tests:
+          - unique
+          - not_null
+      - name: document_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('fct_pii_documents')
+              field: document_key
+      - name: entity_type_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_entity_type')
+              field: entity_type_key
+      - name: start_offset
+        data_tests:
+          - not_null
+      - name: end_offset
+        data_tests:
+          - not_null
+
+  - name: fct_unstructured_extractions
+    description: Validated OCR extractions at extracted-field grain.
+    columns:
+      - name: extraction_key
+        data_tests:
+          - unique
+          - not_null
+      - name: entity_type_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_entity_type')
+              field: entity_type_key
+      - name: source_dataset_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_source_dataset')
+              field: source_dataset_key
+
+  - name: dim_entity_type
+    columns:
+      - name: entity_type_key
+        data_tests:
+          - unique
+          - not_null
+      - name: raw_entity_label
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_source_dataset
+    columns:
+      - name: source_dataset_key
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_locale_domain
+    columns:
+      - name: locale_domain_key
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_edge_case_rule
+    columns:
+      - name: rule_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: bridge_record_edge_cases
+    columns:
+      - name: document_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('fct_pii_documents')
+              field: document_key
+      - name: rule_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_edge_case_rule')
+              field: rule_id

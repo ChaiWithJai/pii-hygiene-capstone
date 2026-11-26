@@ -1,0 +1,5 @@
+rule_id,rule_name,description,severity,pattern
+HIGH_RISK_PII,High-risk PII present,Document contains credential secret or sensitive PHI/financial PII,HIGH,
+OVERLAPPING_SPANS,Overlapping PII spans,Two or more labeled character spans overlap within a document,MEDIUM,
+HIGH_ENTITY_DENSITY,High entity density,Document contains more than 2.5 labeled spans per 100 characters,MEDIUM,
+LOW_OCR_CONFIDENCE,Low OCR confidence,Validated OCR extraction has confidence below 0.80,MEDIUM,

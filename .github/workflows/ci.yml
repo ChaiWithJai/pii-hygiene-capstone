@@ -1,0 +1,109 @@
+name: CI
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Worker lint and full pytest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-worker.txt
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-worker.txt PyYAML
+
+      - name: Lint
+        run: python -m ruff check .
+
+      - name: Run unit tests
+        run: python -m pytest tests -q
+
+  app:
+    name: Streamlit app lint and pytest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-app.txt
+
+      - name: Install app test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-app.txt pytest==8.3.4 ruff==0.5.5
+
+      - name: Lint app
+        run: python -m ruff check app tests/test_app_queries.py
+
+      - name: Run app unit tests
+        run: python -m pytest tests/test_app_queries.py -q
+
+  dbt-parse:
+    name: dbt parse
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dbt.txt
+
+      - name: Install dbt
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dbt.txt
+
+      - name: Parse dbt project
+        env:
+          PII_DB_HOST: 127.0.0.1
+          PII_DB_PORT: "5433"
+          PII_DB_NAME: pii_lab
+          PII_DB_USER: pii_admin
+          PII_DB_PASSWORD: ci-not-used-by-parse
+        run: >-
+          dbt parse
+          --project-dir dbt_pii_hygiene
+          --profiles-dir dbt_pii_hygiene
+
+  compose-config:
+    name: Compose configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Create local-only environment file
+        run: cp .env.example .env
+
+      - name: Validate Compose configuration
+        run: docker compose config --quiet

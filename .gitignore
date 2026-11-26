@@ -1,0 +1,29 @@
+# data & artifacts (never commit corpora or binaries)
+data/
+_raw/
+.venv/
+*.duckdb
+*.parquet
+*.pdf
+*.png
+!docs/assets/*.png
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.env
+
+# dbt
+dbt_pii_hygiene/target/
+dbt_pii_hygiene/dbt_packages/
+dbt_pii_hygiene/logs/
+dbt_pii_hygiene/.user.yml
+
+# airflow / docker
+logs/
+airflow/logs/
+.airflow/
+.DS_Store

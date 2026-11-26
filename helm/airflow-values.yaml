@@ -1,0 +1,86 @@
+# Values override for the official apache-airflow/airflow chart.
+# UNVERIFIED: this repository has not been deployed to Kubernetes.
+executor: KubernetesExecutor
+
+images:
+  airflow:
+    repository: ghcr.io/REPLACE_ME/pii-hygiene-airflow
+    tag: "REPLACE_WITH_IMMUTABLE_TAG"
+    pullPolicy: IfNotPresent
+
+defaultAirflowRepository: ghcr.io/REPLACE_ME/pii-hygiene-airflow
+defaultAirflowTag: "REPLACE_WITH_IMMUTABLE_TAG"
+
+airflowVersion: "2.10.4"
+
+webserver:
+  service:
+    type: ClusterIP
+
+postgresql:
+  enabled: false
+
+data:
+  metadataSecretName: airflow-metadata
+
+dags:
+  persistence:
+    enabled: false
+  gitSync:
+    enabled: false
+
+logs:
+  persistence:
+    enabled: false
+
+config:
+  core:
+    load_examples: "False"
+    default_timezone: UTC
+  logging:
+    logging_level: INFO
+  kubernetes:
+    namespace: pii-hygiene
+    delete_worker_pods: "True"
+    delete_worker_pods_on_failure: "False"
+
+env:
+  - name: PYTHONPATH
+    value: /opt/pii
+  - name: PII_DATA_DIR
+    value: /opt/pii/data
+  - name: PII_DB_HOST
+    valueFrom:
+      secretKeyRef: {name: pii-runtime, key: db-host}
+  - name: PII_DB_PORT
+    valueFrom:
+      secretKeyRef: {name: pii-runtime, key: db-port}
+  - name: PII_DB_NAME
+    valueFrom:
+      secretKeyRef: {name: pii-runtime, key: db-name}
+  - name: PII_DB_USER
+    valueFrom:
+      secretKeyRef: {name: pii-runtime, key: db-user}
+  - name: PII_DB_PASSWORD
+    valueFrom:
+      secretKeyRef: {name: pii-runtime, key: db-password}
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: http://otel-collector:4318
+  - name: OPENLINEAGE_URL
+    value: ""
+
+scheduler:
+  resources:
+    requests: {cpu: 250m, memory: 512Mi}
+    limits: {cpu: "1", memory: 1Gi}
+
+workers:
+  resources:
+    requests: {cpu: "1", memory: 2Gi}
+    limits: {cpu: "4", memory: 8Gi}
+
+triggerer:
+  enabled: true
+  resources:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {cpu: 500m, memory: 512Mi}
