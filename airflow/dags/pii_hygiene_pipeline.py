@@ -226,7 +226,8 @@ with DAG(
     load_raw = BashOperator(
         task_id="load_raw",
         bash_command=(
-            f"{_python('ingestion.load_raw')} --batch-id {{ params.batch_id }}"
+            f"{_python('ingestion.load_raw')} "
+            "--batch-id {{ params.batch_id }}"
         ),
         env=TRACE_ENV,
         append_env=True,
